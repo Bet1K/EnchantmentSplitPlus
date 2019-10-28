@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "dev.jaqobb"
-version = "1.0.0"
+version = "1.0.1"
 description = "Minecraft plugin that allows to convert enchanted items into enchanted books"
 
 java {
