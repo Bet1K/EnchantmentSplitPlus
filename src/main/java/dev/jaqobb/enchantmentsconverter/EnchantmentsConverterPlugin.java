@@ -1,8 +1,8 @@
 package dev.jaqobb.enchantmentsconverter;
 
 import com.bgsoftware.wildchests.api.WildChestsAPI;
+import com.bgsoftware.wildchests.api.objects.chests.Chest;
 import com.bgsoftware.wildchests.api.objects.chests.StorageChest;
-import com.bgsoftware.wildchests.api.objects.data.ChestData;
 import dev.jaqobb.enchantmentsconverter.command.ConvertEnchantmentsCommand;
 import dev.jaqobb.enchantmentsconverter.command.SortEnchantmentsCommand;
 import dev.jaqobb.enchantmentsconverter.configuration.message.Messages;
@@ -41,7 +41,9 @@ public class EnchantmentsConverterPlugin extends JavaPlugin {
 				continue;
 			}
 			Map<Enchantment, Integer> itemEnchantments = item.getEnchantments();
-			if (itemEnchantments.isEmpty()) {
+			if (item.getType() == Material.ENCHANTED_BOOK) {
+				itemEnchantments = ((EnchantmentStorageMeta) item.getItemMeta()).getStoredEnchants();
+			} else if (itemEnchantments.isEmpty()) {
 				continue;
 			}
 			if (freeSpaces + 1 < itemEnchantments.size()) {
@@ -74,6 +76,7 @@ public class EnchantmentsConverterPlugin extends JavaPlugin {
 
 	public void sortEnchantments(Player player, Inventory inventory) {
 		boolean successful = true;
+		inventory:
 		for (int index = 0; index < inventory.getSize(); index++) {
 			ItemStack item = inventory.getItem(index);
 			if (item == null) {
@@ -86,14 +89,17 @@ public class EnchantmentsConverterPlugin extends JavaPlugin {
 			if (itemMeta.getStoredEnchants().size() != 1) {
 				continue;
 			}
-			ChestData chestData = WildChestsAPI.getChestData(item);
-			if (!(chestData instanceof StorageChest)) {
-				successful = false;
-				continue;
+			for (Chest chest : WildChestsAPI.getInstance().getChestsManager().getChests()) {
+				if (chest instanceof StorageChest) {
+					StorageChest storageChest = (StorageChest) chest;
+					if (storageChest.getItemStack().isSimilar(item)) {
+						storageChest.setAmount(storageChest.getExactAmount().add(BigInteger.ONE));
+						inventory.setItem(index, null);
+						continue inventory;
+					}
+				}
 			}
-			inventory.setItem(index, null);
-			StorageChest storageChest = (StorageChest) chestData;
-			storageChest.setAmount(storageChest.getExactAmount().add(BigInteger.ONE));
+			successful = false;
 		}
 		if (successful) {
 			this.messages.getChatMessage("enchantments-sorting-successful")
