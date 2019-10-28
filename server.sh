@@ -37,15 +37,10 @@ case "${1}" in
 			cd "${base_folder}"
 
 			mkdir -p "server/plugins"
-			mkdir -p "server/BuildTools"
 
-			curl "https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar" --output "server/BuildTools/BuildTools.jar"
+			curl "https://papermc.io/api/v1/paper/${2}/latest/download" --output "server/Paper.jar"
 
-			cd "${base_folder}/server/BuildTools"
-			java -jar BuildTools.jar --rev "${2}"
-			cp "spigot-${2}.jar" "../Spigot.jar"
-
-			echo "Spigot downloaded."
+			echo "Paper downloaded."
 		fi
 	)
 	;;
@@ -78,7 +73,7 @@ case "${1}" in
 	(
 		set -e
 		cd "${base_folder}/server"
-		java -Dcom.mojang.eula.agree=true -jar "Spigot.jar"
+		java -Dcom.mojang.eula.agree=true -jar "Paper.jar"
 	)
 	;;
 
@@ -89,7 +84,6 @@ case "${1}" in
 		rm -rf "server"
 		mkdir "server"
 		mkdir "server/plugins"
-		mkdir "server/BuildTools"
 		echo "Cleaned server files."
 	)
 	;;
@@ -99,7 +93,7 @@ case "${1}" in
 		echo "View below for details of the available commands."
 		echo ""
 		echo "Commands:"
-		echo "  * download <Minecraft version>     | Downloads latest version of Spigot for specified release of Minecraft."
+		echo "  * download <Minecraft version>     | Downloads latest version of Paper for specified release of Minecraft."
 		echo "  * copy                             | Compiles and copies plugin build to server."
 		echo "  * start                            | Starts server."
 		echo "  * clean                            | Cleans server files."
