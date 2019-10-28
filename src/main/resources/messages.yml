@@ -1,0 +1,9 @@
+version: 1
+
+not-player: "&cYou have to be player to do that."
+no-permissions: "&cYou don't have required permissions to do that."
+not-looking-at-chest: "&cYou have to be looking at a chest."
+enchantments-converting-successful: "&aSuccessfully converted enchanted item(s)."
+enchantments-converting-not-successful: "&cCouldn't convert enchanted item(s) due to lack of free space."
+enchantments-sorting-successful: "&aSuccessfully sorted enchanted enchanted book(s)."
+enchantments-sorting-not-successful: "&cCouldn't sort enchanted book(s) due to one/some of them not having a storage unit for them."
